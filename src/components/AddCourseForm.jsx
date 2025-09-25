@@ -9,6 +9,8 @@ const AddCourseForm = () => {
     code: "",
   });
 
+  const [message, setMessage] = useState("");
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -16,9 +18,48 @@ const AddCourseForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Course Submitted:", formData);
+    setMessage("");
+
+    // validation (all except thumbnail required)
+    if (!formData.title || !formData.code || !formData.description) {
+      setMessage("Please fill in all required fields.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setMessage("You must be logged in to create a course.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/course", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // ✅ attach token
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.id) {
+        setMessage("Course added successfully");
+        setFormData({
+          title: "",
+          description: "",
+          thumbnail: "",
+          code: "",
+        });
+      } else {
+        setMessage("Failed to add course");
+      }
+    } catch (err) {
+      setMessage("Failed to add course");
+    }
   };
 
   return (
@@ -33,6 +74,16 @@ const AddCourseForm = () => {
         Fill in the details below to create a new course.
       </p>
 
+      {message && (
+        <p
+          className={`text-center font-medium ${
+            message.includes("successfully") ? "text-green-600" : "text-red-600"
+          }`}
+        >
+          {message}
+        </p>
+      )}
+
       {/* Grid for inputs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {/* Title */}
@@ -43,7 +94,7 @@ const AddCourseForm = () => {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            placeholder="Course Title"
+            placeholder="Course Title *"
             className="flex-1 outline-none text-gray-700"
             required
           />
@@ -57,13 +108,13 @@ const AddCourseForm = () => {
             name="code"
             value={formData.code}
             onChange={handleChange}
-            placeholder="Course Code"
+            placeholder="Course Code *"
             className="flex-1 outline-none text-gray-700"
             required
           />
         </div>
 
-        {/* Thumbnail */}
+        {/* Thumbnail (optional) */}
         <div className="flex items-center border rounded-lg px-4 py-3 gap-2 sm:col-span-2 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-200 transition">
           <Image className="w-5 h-5 text-indigo-500" />
           <input
@@ -71,9 +122,8 @@ const AddCourseForm = () => {
             name="thumbnail"
             value={formData.thumbnail}
             onChange={handleChange}
-            placeholder="Thumbnail URL"
+            placeholder="Thumbnail URL (optional)"
             className="flex-1 outline-none text-gray-700"
-            required
           />
         </div>
 
@@ -84,7 +134,7 @@ const AddCourseForm = () => {
             name="description"
             value={formData.description}
             onChange={handleChange}
-            placeholder="Course Description"
+            placeholder="Course Description *"
             rows="4"
             className="flex-1 outline-none text-gray-700 resize-none"
             required
@@ -93,7 +143,10 @@ const AddCourseForm = () => {
       </div>
 
       {/* Submit */}
-      <button className="w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">
+      <button
+        type="submit"
+        className="w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
+      >
         Create Course
       </button>
     </form>

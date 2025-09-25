@@ -1,28 +1,98 @@
+import { useState } from "react";
 import { User, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // validation
+    if (!formData.firstName || !formData.username || !formData.password || !formData.confirmPassword) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName || null,
+          username: formData.username,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.id) {
+        navigate("/login");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again later.");
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-5 sm:gap-6 bg-white p-6 sm:p-8 lg:p-10 rounded-2xl shadow-lg w-full max-w-sm sm:max-w-md mx-auto m-4">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-5 sm:gap-6 bg-white p-6 sm:p-8 lg:p-10 rounded-2xl shadow-lg w-full max-w-sm sm:max-w-md mx-auto m-4"
+    >
       <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 text-center">
         Create an Account
       </h2>
+
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
       {/* First Name */}
       <div className="flex items-center border rounded-lg px-3 sm:px-4 py-2 gap-2">
         <User className="w-5 h-5 text-gray-400" />
         <input
           type="text"
-          placeholder="First Name"
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleChange}
+          placeholder="First Name *"
           className="outline-none flex-1 text-sm sm:text-base"
+          required
         />
       </div>
 
-      {/* Last Name */}
+      {/* Last Name (optional) */}
       <div className="flex items-center border rounded-lg px-3 sm:px-4 py-2 gap-2">
         <User className="w-5 h-5 text-gray-400" />
         <input
           type="text"
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleChange}
           placeholder="Last Name"
           className="outline-none flex-1 text-sm sm:text-base"
         />
@@ -33,8 +103,12 @@ const RegisterForm = () => {
         <User className="w-5 h-5 text-gray-400" />
         <input
           type="text"
-          placeholder="Username"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          placeholder="Username *"
           className="outline-none flex-1 text-sm sm:text-base"
+          required
         />
       </div>
 
@@ -43,8 +117,12 @@ const RegisterForm = () => {
         <Lock className="w-5 h-5 text-gray-400" />
         <input
           type="password"
-          placeholder="Password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Password *"
           className="outline-none flex-1 text-sm sm:text-base"
+          required
         />
       </div>
 
@@ -53,13 +131,20 @@ const RegisterForm = () => {
         <Lock className="w-5 h-5 text-gray-400" />
         <input
           type="password"
-          placeholder="Confirm Password"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          placeholder="Confirm Password *"
           className="outline-none flex-1 text-sm sm:text-base"
+          required
         />
       </div>
 
       {/* Register Button */}
-      <button className="w-full py-2.5 sm:py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm sm:text-base font-medium">
+      <button
+        type="submit"
+        className="w-full py-2.5 sm:py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm sm:text-base font-medium"
+      >
         Register
       </button>
 
@@ -70,7 +155,7 @@ const RegisterForm = () => {
           Login
         </Link>
       </p>
-    </div>
+    </form>
   );
 };
 
