@@ -3,6 +3,7 @@ import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import NotFound from './pages/NotFound.jsx';
+import AddCourse from './pages/AddCourse.jsx';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/course" element={<AddCourse />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
     </>
