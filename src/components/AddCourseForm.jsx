@@ -2,6 +2,7 @@ import { BookOpen, FileText, Image, Hash } from "lucide-react";
 import { useState } from "react";
 
 const AddCourseForm = () => {
+  const url = import.meta.env.VITE_BACKEND_URL;
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -22,7 +23,6 @@ const AddCourseForm = () => {
     e.preventDefault();
     setMessage("");
 
-    // validation (all except thumbnail required)
     if (!formData.title || !formData.code || !formData.description) {
       setMessage("Please fill in all required fields.");
       return;
@@ -35,11 +35,11 @@ const AddCourseForm = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/course", {
+      const response = await fetch(`${url}api/v1/course`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // ✅ attach token
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });

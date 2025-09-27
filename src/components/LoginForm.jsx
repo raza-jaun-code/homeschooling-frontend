@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const url = import.meta.env.VITE_BACKEND_URL;
 
   const [formData, setFormData] = useState({
     username: "",
@@ -29,7 +30,7 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/login", {
+      const response = await fetch(`${url}api/v1/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
