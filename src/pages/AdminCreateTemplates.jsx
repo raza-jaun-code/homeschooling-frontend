@@ -1,7 +1,7 @@
 import { BookOpen, FileText, Image, Hash } from "lucide-react";
 import { useState } from "react";
 
-const AddCourseForm = () => {
+const AdminCreateTemplates = () => {
   const url = import.meta.env.VITE_BACKEND_URL;
 
   const [formData, setFormData] = useState({
@@ -66,14 +66,14 @@ const AddCourseForm = () => {
       return;
     }
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("adminToken");
     if (!token) {
       setMessage("You must be logged in to create a course.");
       return;
     }
 
     try {
-      const response = await fetch(`${url}api/v1/course`, {
+      const response = await fetch(`${url}api/v1/admin/course`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -196,4 +196,4 @@ const AddCourseForm = () => {
   );
 };
 
-export default AddCourseForm;
+export default AdminCreateTemplates;

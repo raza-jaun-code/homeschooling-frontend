@@ -6,7 +6,7 @@ const Register = () => {
   return (
     <>
       <Navbar />
-      <main className="flex justify-center items-center min-h-[80vh] px-4 sm:px-6 bg-gradient-to-r from-indigo-50 to-white">
+      <main className="min-h-[85vh] flex justify-center items-center bg-[#0b0f19] text-white px-4 py-12">
         <RegisterForm />
       </main>
       <Footer />

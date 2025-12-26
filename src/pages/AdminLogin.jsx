@@ -1,17 +1,17 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import LoginForm from "../components/LoginForm";
+import AdminLoginForm from "../components/AdminLoginForm";
 
-const Login = () => {
+const AdminLogin = () => {
   return (
     <>
       <Navbar />
       <main className="flex justify-center items-center min-h-[80vh] px-4 sm:px-6 bg-[#0b0f19]">
-        <LoginForm />
+        <AdminLoginForm/>
       </main>
       <Footer />
     </>
   );
 };
 
-export default Login;
+export default AdminLogin;

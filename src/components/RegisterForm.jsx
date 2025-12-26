@@ -26,7 +26,6 @@ const RegisterForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // validation
     if (!formData.firstName || !formData.username || !formData.password || !formData.confirmPassword) {
       setError("Please fill in all required fields.");
       return;
@@ -56,107 +55,113 @@ const RegisterForm = () => {
       } else {
         setError("Registration failed. Please try again.");
       }
-    } catch (err) {
+    } catch {
       setError("Something went wrong. Please try again later.");
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col gap-5 sm:gap-6 bg-white p-6 sm:p-8 lg:p-10 rounded-2xl shadow-lg w-full max-w-sm sm:max-w-md mx-auto m-4"
-    >
-      <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 text-center">
-        Create an Account
+    <div className="w-full max-w-2xl bg-[#0b0f19]/90 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-2xl mt-25 p-10 relative overflow-hidden">
+      {/* Decorative glowing background effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 via-blue-800/10 to-transparent opacity-50 rounded-3xl pointer-events-none" />
+
+      <h2 className="relative text-4xl font-bold text-center text-white mb-8 tracking-tight">
+        Create Your Account
       </h2>
 
-      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+      {error && (
+        <p className="text-red-400 text-center mb-6 font-medium relative">{error}</p>
+      )}
 
-      {/* First Name */}
-      <div className="flex items-center border rounded-lg px-3 sm:px-4 py-2 gap-2">
-        <User className="w-5 h-5 text-gray-400" />
-        <input
-          type="text"
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          placeholder="First Name *"
-          className="outline-none flex-1 text-sm sm:text-base"
-          required
-        />
-      </div>
+      <form onSubmit={handleSubmit} className="relative space-y-8">
 
-      {/* Last Name (optional) */}
-      <div className="flex items-center border rounded-lg px-3 sm:px-4 py-2 gap-2">
-        <User className="w-5 h-5 text-gray-400" />
-        <input
-          type="text"
-          name="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          placeholder="Last Name"
-          className="outline-none flex-1 text-sm sm:text-base"
-        />
-      </div>
+        {/* Username */}
+        <div className="flex items-center bg-[#1a1f2e] border border-gray-700 rounded-lg px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500">
+          <User className="text-gray-400 w-5 h-5 mr-3" />
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            placeholder="Username *"
+            className="w-full bg-transparent text-gray-100 placeholder-gray-500 outline-none"
+          />
+        </div>
 
-      {/* Username */}
-      <div className="flex items-center border rounded-lg px-3 sm:px-4 py-2 gap-2">
-        <User className="w-5 h-5 text-gray-400" />
-        <input
-          type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          placeholder="Username *"
-          className="outline-none flex-1 text-sm sm:text-base"
-          required
-        />
-      </div>
+        {/* Row 1: First & Last Name */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="flex items-center bg-[#1a1f2e] border border-gray-700 rounded-lg px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500">
+            <User className="text-gray-400 w-5 h-5 mr-3" />
+            <input
+              type="text"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              placeholder="First Name *"
+              className="w-full bg-transparent text-gray-100 placeholder-gray-500 outline-none"
+            />
+          </div>
 
-      {/* Password */}
-      <div className="flex items-center border rounded-lg px-3 sm:px-4 py-2 gap-2">
-        <Lock className="w-5 h-5 text-gray-400" />
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="Password *"
-          className="outline-none flex-1 text-sm sm:text-base"
-          required
-        />
-      </div>
+          <div className="flex items-center bg-[#1a1f2e] border border-gray-700 rounded-lg px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500">
+            <User className="text-gray-400 w-5 h-5 mr-3" />
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="Last Name"
+              className="w-full bg-transparent text-gray-100 placeholder-gray-500 outline-none"
+            />
+          </div>
+        </div>
+        
+        {/* Row 2: Passwords */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="flex items-center bg-[#1a1f2e] border border-gray-700 rounded-lg px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500">
+            <Lock className="text-gray-400 w-5 h-5 mr-3" />
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Password *"
+              className="w-full bg-transparent text-gray-100 placeholder-gray-500 outline-none"
+            />
+          </div>
 
-      {/* Confirm Password */}
-      <div className="flex items-center border rounded-lg px-3 sm:px-4 py-2 gap-2">
-        <Lock className="w-5 h-5 text-gray-400" />
-        <input
-          type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          placeholder="Confirm Password *"
-          className="outline-none flex-1 text-sm sm:text-base"
-          required
-        />
-      </div>
+          <div className="flex items-center bg-[#1a1f2e] border border-gray-700 rounded-lg px-4 py-3 focus-within:ring-2 focus-within:ring-indigo-500">
+            <Lock className="text-gray-400 w-5 h-5 mr-3" />
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm Password *"
+              className="w-full bg-transparent text-gray-100 placeholder-gray-500 outline-none"
+            />
+          </div>
+        </div>
 
-      {/* Register Button */}
-      <button
-        type="submit"
-        className="w-full py-2.5 sm:py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm sm:text-base font-medium"
-      >
-        Register
-      </button>
+        {/* Register Button */}
+        <div className="relative group mt-6">
+          <button
+            type="submit"
+            className="relative w-full py-3.5 font-semibold text-white rounded-lg bg-[#1e293b] overflow-hidden transition-colors"
+          >
+            <span className="relative z-10">Register</span>
+            {/* Gradient Hover Layer */}
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+          </button>
+        </div>
+      </form>
 
-      {/* Redirect to Login */}
-      <p className="text-xs sm:text-sm text-gray-600 text-center">
+      <p className="relative text-center text-gray-400 text-sm mt-8">
         Already have an account?{" "}
-        <Link to="/login" className="text-indigo-600 hover:underline">
+        <Link to="/login" className="text-indigo-400 hover:underline">
           Login
         </Link>
       </p>
-    </form>
+    </div>
   );
 };
 

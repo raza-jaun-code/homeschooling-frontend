@@ -7,20 +7,35 @@ const NotFound = () => {
   return (
     <>
       <Navbar />
-      <main className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4 sm:px-6">
-        <AlertTriangle className="w-12 h-12 sm:w-16 sm:h-16 text-red-500 mb-4 sm:mb-6" />
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-800">
-          404
-        </h1>
-        <p className="mt-3 sm:mt-4 text-base sm:text-lg text-gray-600 max-w-md">
-          Oops! The page you’re looking for doesn’t exist.
-        </p>
-        <Link
-          to="/"
-          className="mt-6 sm:mt-8 px-5 sm:px-6 py-2.5 sm:py-3 bg-indigo-600 text-white rounded-xl shadow hover:bg-indigo-700 transition"
-        >
-          Go Back Home
-        </Link>
+      <main className="relative flex flex-col items-center justify-center min-h-[80vh] px-6 py-10 text-center bg-[#0b0f19] text-gray-200 overflow-hidden">
+        {/* Subtle animated gradient glow */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/10 via-purple-900/10 to-transparent opacity-70 blur-3xl pointer-events-none"></div>
+
+        <div className="relative z-10 flex flex-col mt-25 mb-10 items-center max-w-lg">
+          <div className="flex items-center justify-center w-20 h-20 bg-red-500/10 rounded-full border border-red-500/30 mb-6">
+            <AlertTriangle className="w-10 h-10 text-red-400" />
+          </div>
+
+          <h1 className="text-6xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-violet-500 bg-clip-text text-transparent mb-4">
+            404
+          </h1>
+
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-3 text-gray-100">
+            Page Not Found
+          </h2>
+
+          <p className="text-gray-400 mb-8">
+            Oops! The page you’re looking for doesn’t exist or has been moved.
+          </p>
+
+          <Link
+            to="/"
+            className="relative group px-6 py-3 font-semibold text-white rounded-lg bg-[#1e293b] overflow-hidden transition-all duration-300"
+          >
+            <span className="relative z-10">Go Back Home</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
+          </Link>
+        </div>
       </main>
       <Footer />
     </>

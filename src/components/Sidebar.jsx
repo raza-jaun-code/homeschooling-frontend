@@ -1,71 +1,126 @@
-import { BookOpen, Users, PlusCircle, Menu } from "lucide-react";
+import {
+  BookOpen,
+  Users,
+  PlusCircle,
+  MessageSquare,
+  Bell,
+  User,
+  Send,
+  Menu,
+  LogOut,
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Sidebar = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const location = useLocation();
 
+  // Handle responsive behavior
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) setOpen(false);
+      else setOpen(true);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const navItems = [
-    { path: "/dashboard", label: "My Courses", icon: <BookOpen size={20} /> },
-    { path: "/dashboard/register-student", label: "Register Student", icon: <Users size={20} /> },
-    { path: "/dashboard/add-course", label: "Add Course", icon: <PlusCircle size={20} /> },
+    // { path: "/dashboard", label: "Dashboard", icon: <BookOpen className="w-5 h-5" /> },
+    { path: "/dashboard/", label: "Courses", icon: <BookOpen className="w-5 h-5" /> },
+    // { path: "/dashboard/courses/1", label: "Assignments", icon: <PlusCircle className="w-5 h-5" /> },
+    // { path: "/dashboard/announcements", label: "Announcements", icon: <Bell className="w-5 h-5" /> },
+    // { path: "/dashboard/messages", label: "Messages", icon: <MessageSquare className="w-5 h-5" /> },
+    { path: "/dashboard/register-student", label: "Register Student", icon: <Users className="w-5 h-5" /> },
+    { path: "/dashboard/student-submissions", label: "Student Submissions", icon: <Send className="w-5 h-5" /> }
+    // { path: "/dashboard/add-course", label: "Add Course", icon: <PlusCircle className="w-5 h-5" /> },
+    // { path: "/dashboard/profile", label: "Profile", icon: <User className="w-5 h-5" /> },
   ];
 
   return (
-    <div>
-      {/* Mobile Navbar */}
-      <div className="md:hidden flex justify-between items-center p-4 shadow bg-white sticky top-0 z-50">
-        <h2 className="text-xl font-bold text-indigo-600">Parent Portal</h2>
-        <button
-          onClick={() => setOpen(!open)}
-          className="p-2 rounded-md hover:bg-indigo-100 transition"
-        >
-          <Menu size={24} />
-        </button>
-      </div>
-
-      {/* Sidebar / Drawer */}
-      <div
-        className={`fixed md:static top-0 left-0 h-full w-64 bg-white shadow-xl p-6 flex flex-col justify-between transform ${
-          open ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 transition-transform duration-300 z-40`}
+    <>
+      {/* Sidebar toggle (mobile) */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-[#111827] border border-gray-800 hover:bg-[#1f2937]"
       >
-        <div className="flex flex-col gap-6">
-          {/* Logo */}
-          <h2 className="text-2xl font-bold text-indigo-600 hidden md:block">
-            Parent Portal
-          </h2>
+        <Menu className="w-5 h-5 text-gray-300" />
+      </button>
 
-          {/* Navigation */}
-          <nav className="flex flex-col gap-2">
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${
-                    isActive
-                      ? "bg-indigo-50 text-indigo-600 font-semibold"
-                      : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
-                  }`}
-                  onClick={() => setOpen(false)} // close on mobile click
-                >
-                  {item.icon}
-                  {item.label}
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
+      {/* Sidebar */}
+      <aside
+        className={`fixed lg:static top-0 left-0 h-screen z-40 transform transition-transform duration-300 ease-in-out
+        ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+      >
+        <div className="flex flex-col justify-between h-full w-72 bg-[#0b0f19]/95 backdrop-blur-xl border-r border-gray-800 p-4">
+          
+          {/* Header */}
+          <div>
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="bg-gradient-to-br from-pink-500 via-purple-500 to-violet-500 p-3 rounded-2xl shadow-lg">
+                  <BookOpen className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <div className="text-white font-extrabold text-lg">Parent Portal</div>
+                  <div className="text-xs text-gray-400">Manage students & courses</div>
+                </div>
+              </div>
+            </div>
 
-        {/* Footer / Logout Placeholder */}
-        <div className="border-t pt-4 text-sm text-gray-500">
-          <p className="text-center">© 2025 HomeSchooling</p>
+            {/* Navigation */}
+            <nav className="flex flex-col gap-2 mt-13">
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-xl relative overflow-hidden font-medium transition-all duration-200
+                      ${
+                        isActive
+                          ? "text-white shadow-md"
+                          : "text-gray-300 hover:text-white"
+                      }`}
+                  >
+                    {/* Gradient background for active or hover */}
+                    <div
+                      className={`absolute inset-0 rounded-xl bg-gradient-to-r from-pink-500 via-purple-500 to-violet-500
+                        ${isActive ? "opacity-80" : "opacity-0 group-hover:opacity-30"}
+                        transition-opacity duration-300`}
+                    ></div>
+
+                    <span className="relative z-10">{item.icon}</span>
+                    <span className="relative z-10">{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Footer (Logout) */}
+          <div>
+            <Link
+              to="/login"
+              className="mt-4 w-full flex items-center justify-center gap-2 py-2 rounded-lg text-white 
+              bg-[#1e293b] relative group overflow-hidden font-medium shadow-md border border-gray-700 
+              hover:shadow-lg hover:text-white transition-all duration-300"
+              onClick={() => {
+                localStorage.removeItem("token");
+              }}
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                <LogOut className="w-4 h-4" />
+                Logout
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg" />
+            </Link>
+          </div>
         </div>
-      </div>
-    </div>
+      </aside>
+    </>
   );
 };
 
